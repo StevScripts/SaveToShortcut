@@ -81,10 +81,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func openSettings() {
         NSApp.activate(ignoringOtherApps: true)
-        if #available(macOS 14.0, *) {
-            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+
+        // Find existing settings window or let SwiftUI create it
+        if let window = NSApp.windows.first(where: { $0.title.contains("Settings") }) {
+            window.makeKeyAndOrderFront(nil)
         } else {
+            // Trigger the SwiftUI Window scene by sending the standard open action
+            if #available(macOS 14.0, *) {
+                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            }
             NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+
+            // Fallback: find and show any window that was just created
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let window = NSApp.windows.first(where: { $0.title.contains("Settings") }) {
+                    window.makeKeyAndOrderFront(nil)
+                }
+            }
         }
     }
 
