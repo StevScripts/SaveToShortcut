@@ -49,7 +49,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func updateMenu() {
         let menu = NSMenu()
 
-        let statusText = appState.isArmed ? "Armed — next download will prompt" : "Disarmed"
+        let batchLabel = appState.batchMode ? " (batch)" : ""
+        let statusText = appState.isArmed ? "Armed\(batchLabel) — downloads will prompt" : "Disarmed"
         let statusItem = NSMenuItem(title: statusText, action: nil, keyEquivalent: "")
         statusItem.isEnabled = false
         menu.addItem(statusItem)
@@ -159,7 +160,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.appState.disarm()
+
+            if !self.appState.batchMode {
+                self.appState.disarm()
+            }
 
             let panel = NSSavePanel()
             panel.nameFieldStringValue = fileURL.lastPathComponent

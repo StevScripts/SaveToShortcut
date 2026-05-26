@@ -54,6 +54,14 @@ struct GeneralSettingsView: View {
                         appState.save()
                     }
 
+                Toggle("Batch mode", isOn: $appState.batchMode)
+                    .onChange(of: appState.batchMode) { _ in
+                        appState.save()
+                    }
+                Text("When enabled, the app stays armed after each download so you can redirect multiple files in a row. Press the hotkey again to disarm.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
                 HStack {
                     Text("Auto-disarm after:")
                     Spacer()

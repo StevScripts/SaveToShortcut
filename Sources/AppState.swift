@@ -12,6 +12,7 @@ class AppState: ObservableObject {
     @Published var maxRecentDestinations: Int
     @Published var notificationStyle: NotificationStyle
     @Published var recentDestinations: [URL]
+    @Published var batchMode: Bool
 
     private var disarmTimer: Timer?
 
@@ -43,6 +44,8 @@ class AppState: ObservableObject {
         self.autoDisarmSeconds = defaults.integer(forKey: "autoDisarmSeconds") == 0 ? 30 : defaults.integer(forKey: "autoDisarmSeconds")
         self.maxRecentDestinations = defaults.integer(forKey: "maxRecentDestinations") == 0 ? 5 : defaults.integer(forKey: "maxRecentDestinations")
 
+        self.batchMode = defaults.bool(forKey: "batchMode")
+
         if let styleRaw = defaults.string(forKey: "notificationStyle"),
            let style = NotificationStyle(rawValue: styleRaw) {
             self.notificationStyle = style
@@ -68,6 +71,7 @@ class AppState: ObservableObject {
         defaults.set(launchAtLogin, forKey: "launchAtLogin")
         defaults.set(autoDisarmSeconds, forKey: "autoDisarmSeconds")
         defaults.set(maxRecentDestinations, forKey: "maxRecentDestinations")
+        defaults.set(batchMode, forKey: "batchMode")
         defaults.set(notificationStyle.rawValue, forKey: "notificationStyle")
 
         let paths = recentDestinations.map { $0.path }
