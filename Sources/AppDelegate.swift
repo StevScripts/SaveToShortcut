@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func requestNotificationPermission() {
+        guard Bundle.main.bundleIdentifier != nil else { return }
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
 
@@ -177,6 +178,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func sendNotification(fileName: String, destination: String) {
         guard appState.notificationStyle != .silent else { return }
+        guard Bundle.main.bundleIdentifier != nil else {
+            print("✓ Moved: \(fileName) → \(destination)")
+            return
+        }
 
         let content = UNMutableNotificationContent()
         content.title = "File Moved"
